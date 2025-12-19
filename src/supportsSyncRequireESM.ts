@@ -1,0 +1,8 @@
+/**
+ * Check if current Node supports sync require of ESM.
+ * Node 22+ with --experimental-require-module flag, Node 23+ by default.
+ */
+export default function supportsSyncRequireESM(): boolean {
+  const major = +process.versions.node.split('.')[0];
+  return major >= 23;
+}
