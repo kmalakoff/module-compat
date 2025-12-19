@@ -1,6 +1,6 @@
 {
   "name": "module-compat",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Module type detection and loading for CJS and ESM compatibility",
   "keywords": [
     "module",
