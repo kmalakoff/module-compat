@@ -1,4 +1,5 @@
 import assert from 'assert';
+import isAbsolute from 'is-absolute';
 import { loadModuleSync } from 'module-compat';
 import path from 'path';
 import url from 'url';
@@ -30,6 +31,17 @@ describe('loadModuleSync', () => {
       assert.throws(() => {
         loadModuleSync(path.join(DATA, 'non-existent.cjs'));
       }, /Cannot find module/);
+    });
+  });
+
+  describe('absolute path handling', () => {
+    // Verify absolute paths work correctly on all platforms (including Windows)
+
+    it('loads CJS with absolute path', () => {
+      const absolutePath = path.resolve(DATA, 'cjs-module.cjs');
+      assert.ok(isAbsolute(absolutePath), 'path should be absolute');
+      const mod = loadModuleSync(absolutePath);
+      assert.equal(typeof mod, 'function');
     });
   });
 });

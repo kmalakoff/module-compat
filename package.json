@@ -1,6 +1,6 @@
 {
   "name": "module-compat",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Module type detection and loading for CJS and ESM compatibility",
   "keywords": [
     "module",
@@ -47,6 +47,7 @@
   "devDependencies": {
     "@types/mocha": "*",
     "@types/node": "*",
+    "is-absolute": "^1.0.0",
     "node-version-use": "*",
     "ts-dev-stack": "*",
     "tsds-config": "*"
