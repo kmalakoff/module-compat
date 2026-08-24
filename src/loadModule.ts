@@ -1,4 +1,5 @@
 import Module from 'module';
+import url from 'url';
 
 import applyInterop from './applyInterop.ts';
 import moduleType from './moduleType.ts';
@@ -58,5 +59,7 @@ export default function loadModule(filePath: string, optionsOrCallback: LoadOpti
   // Node 12-22: use import()
   // ESM build: preserved as import()
   // CJS build: transpiled to require() - will fail on .mjs, but that's expected
-  import(filePath).then((mod) => callback(null, applyInterop(mod, options))).catch((err) => callback(err));
+  // Convert to file URL for Windows compatibility (import() requires file:// URLs on Windows)
+  const fileUrl = url.pathToFileURL(filePath).href;
+  import(fileUrl).then((mod) => callback(null, applyInterop(mod, options))).catch((err) => callback(err));
 }

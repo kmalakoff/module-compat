@@ -1,4 +1,5 @@
 import assert from 'assert';
+import isAbsolute from 'is-absolute';
 import { loadModule, supportsESM } from 'module-compat';
 import path from 'path';
 import url from 'url';
@@ -75,6 +76,32 @@ describe('loadModule', () => {
       loadModule(path.join(DATA, 'non-existent.cjs'), (err) => {
         assert.ok(err);
         assert.ok(err.message.indexOf('Cannot find module') >= 0 || (err as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND');
+        done();
+      });
+    });
+  });
+
+  describe('absolute path handling', () => {
+    // Windows requires file:// URLs for import(), not raw paths like D:\...
+    // These tests verify absolute paths are handled correctly on all platforms
+
+    it('loads CJS with absolute path', (done) => {
+      const absolutePath = path.resolve(DATA, 'cjs-module.cjs');
+      assert.ok(isAbsolute(absolutePath), 'path should be absolute');
+      loadModule(absolutePath, (err, mod) => {
+        assert.equal(err, null);
+        assert.equal(typeof mod, 'function');
+        done();
+      });
+    });
+
+    it('loads ESM with absolute path', function (done) {
+      if (!supportsESM()) return this.skip();
+      const absolutePath = path.resolve(DATA, 'esm-module.mjs');
+      assert.ok(isAbsolute(absolutePath), 'path should be absolute');
+      loadModule(absolutePath, (err, mod) => {
+        assert.equal(err, null);
+        assert.equal(typeof mod, 'function');
         done();
       });
     });
