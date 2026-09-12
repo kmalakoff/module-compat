@@ -38,7 +38,7 @@ supportsSyncRequireESM(); // true if Node 23+
 ```typescript
 import { loadModule, loadModuleSync } from 'module-compat';
 
-// Callback-based (works on all Node versions)
+// Callback-based (CJS on all Node versions; ESM on Node 12+ through the ESM import entry)
 loadModule('/path/to/module.mjs', (err, mod) => {
   if (err) throw err;
   console.log(mod);
@@ -79,8 +79,10 @@ loadModule('module.mjs', { interop: 'raw' }, (err, mod) => {
 
 ## Node Version Support
 
-| Node Version | CJS | ESM (async) | ESM (sync) |
-|-------------|-----|-------------|------------|
-| < 12 | Yes | No | No |
-| 12-22 | Yes | Yes | No |
-| 23+ | Yes | Yes | Yes |
+| Node Version | CJS files | ESM async via ESM import | ESM async via CJS require | ESM sync |
+|-------------|-----------|-------------------------|-------------------------|----------|
+| < 12 | Yes | No | No | No |
+| 12-22 | Yes | Yes | No | No |
+| 23+ | Yes | Yes | Yes | Yes |
+
+For ESM files on Node 12-22, import `module-compat` through its ESM entry. The CommonJS entry cannot load ESM files on those versions because its dynamic import is transpiled to `require()`. CommonJS consumers need Node 23+ for ESM loading. `supportsESM()` reports whether the runtime supports ESM at all.
